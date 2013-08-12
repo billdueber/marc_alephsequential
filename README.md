@@ -37,16 +37,17 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
 Aleph sequential is a MARC serialization format that is easily output by Ex Libris' Aleph software.
 Each MARC record is presented as a series of unicode text lines, one field per line.
 
-  000000228 LDR   L ^^^^^nam^a22002891^^4500
-  000000228 001   L 000000228
-  000000228 003   L MiU
-  000000228 005   L 19880715000000.0
-  000000228 006   L m^^^^^^^^d^^^^^^^^
-  000000228 007   L cr^bn^---auaua
-  000000228 008   L 880715r19691828nyuab^^^^^^^^|00000^eng^^
-  000000228 010   L $$a68055188
-  000000228 020   L $$a083711750X
-  000000228 035   L $$a(RLIN)MIUG0021856-B
+
+    000000228 LDR   L ^^^^^nam^a22002891^^4500
+    000000228 001   L 000000228
+    000000228 003   L MiU
+    000000228 005   L 19880715000000.0
+    000000228 006   L m^^^^^^^^d^^^^^^^^
+    000000228 007   L cr^bn^---auaua
+    000000228 008   L 880715r19691828nyuab^^^^^^^^|00000^eng^^
+    000000228 010   L $$a68055188
+    000000228 020   L $$a083711750X
+    000000228 035   L $$a(RLIN)MIUG0021856-B
 
 Each line has the following format (note: All must be in utf-8)
 
