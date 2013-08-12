@@ -15,7 +15,7 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
   require 'marc_alephsequential'
 
   log = GetALogFromSomewhere.new
-  reader = MARC::AlephSequentialReader.new('myfile.seq')
+  reader = MARC::AlephSequential::Reader.new('myfile.seq')
   reader.flexible = true # fix bad indicators, look for embedded newlines, etc.
   reader.log = log # set up a logger; otherwise, no logging of warnings will be done
   

@@ -5,8 +5,8 @@ require File.expand_path('../lib/marc_alephsequential/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name          = "marc_alephsequential"
   gem.version       = MarcAlephsequential::VERSION
-  gem.summary       = %q{TODO: Summary}
-  gem.description   = %q{TODO: Description}
+  gem.summary       = %q{ruby-marc reader for Aleph sequential files}
+  gem.description   = %q{A ruby-marc reader for Aleph sequential files, a MARC serialization supported by Ex Libris' Aleph}
   gem.license       = "MIT"
   gem.authors       = ["Bill Dueber"]
   gem.email         = "bill@dueber.com"
