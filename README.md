@@ -17,7 +17,7 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
   log = GetALogFromSomewhere.new
   reader = MARC::AlephSequential::Reader.new('myfile.seq')
   reader.flexible = true # fix bad indicators, look for embedded newlines, etc.
-  reader.log = log # set up a logger; otherwise, no logging of warnings will be done
+  reader.log = log # optional. Set up a logger; otherwise, no logging of warnings will be done
   
   begin
     reader.each do |r|
@@ -32,7 +32,7 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
 
 ```
 
-## Description
+## Description of the Aleph Sequential format
 
 Aleph sequential is a MARC serialization format that is easily output by Ex Libris' Aleph software.
 Each MARC record is presented as a series of unicode text lines, one field per line.
@@ -59,15 +59,24 @@ Each line has the following format (note: All must be in utf-8)
 * [space L space], for some historic reasons I don't know
 * The tag's value, perhaps with internal subfields
 
-### How to read the alephsequential "value"
+### How to read the Aleph sequential "value"
 
-The leader and control fields have no internal structure, but spaces are turned into '^' for some reason.
+The leader and control fields have no internal structure, but spaces in the value are displayed as '^' for some reason. (The reader, obviously, changes them back into spaces)
 
 For data fields, the subfields are indicated as follows:
 
-* A _subfield start marker_ (let's just say "SSM") matches /\$\$[a-z0-9]/
+* A _subfield start marker_ (let's just say "SSM") matches /\$\$[a-z0-9]/ (e.g., $$a)
 * The value string for a data field must start with an SSM 
 * An SSM marks the start of a subfield (and the end of the previous subfield, if any)
+
+### Obvious limitations of the Aleph sequential format
+
+Actually, it's not all bad; I like it in a lot of ways. A little verbose at times, but easy to read for a human, and easy to write one-off scripts to run through a file and get statistics about use of tags, find a specific record (just match the bib ID at the beginning of the line), etc. 
+
+The easy-to-see problems are:
+
+* fixed field size. Aleph has a lot of Cobol underneath. So if your bib ids don't happen to be nine characters, well, too bad.
+* You can't have an embedded '$$' in a data field's value, because it will be interpreted as the start of a new subfield. '$$' isn't super common as a typo, but I've seen it.
 
 
 ## _Flexible_ mode
