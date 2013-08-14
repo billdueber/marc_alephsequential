@@ -1,3 +1,6 @@
+require 'marc'
+require_relative 'error'
+
 module MARC
   module AlephSequential
     
@@ -5,26 +8,29 @@ module MARC
       
       TURN_TO_SPACE = /\^/
       SPACIFY_TYPES = [:control, :leader]
-      DEFAULT_LOG = Yell.new(STDERR, :level => :fatal)
       SUBFIELD_SPLIT_PATTERN = /\$\$([a-zA-Z0-9])/
+      VALID_ID = /^\d{9}$/
 
       attr_accessor :line_number, :rawstr, :log, 
                     :id,  :tag, :ind1, :ind2, :type, :value
                     
       attr_reader :tag
       
-      def initialize(rawstr, line_number, log=DEFAULT_LOG)
+      def initialize(rawstr, line_number)
         @rawstr = rawstr
         @line_number = line_number
-        @log = log
-        
+                
         (self.id,self.tag,self.ind1,self.ind2,self.value) = *(parseline(rawstr))
         
-        # do error checking against the tag, id, etc.
-        if SPACIFY_TYPES.include? self.type
+        # clean up the leader
+        if self.type == :leader
           self.value = cleanup_fixed(self.value)
         end
         
+      end
+      
+      def valid_id?
+        return VALID_ID.match(id) ? true : false
       end
       
       
@@ -37,7 +43,7 @@ module MARC
         when :data
           self.to_data_field
         else
-          log.fatal "Tried to call #to_field on line type '#{self.type}'"
+          raise MARC::AlephSequential::Error.new(id, line_number ), "Tried to call #to_field on line type '#{self.type}'", nil
         end
       end
       
@@ -83,8 +89,10 @@ module MARC
           self.type = :leader
         elsif MARC::ControlField.control_tag?(t)
           self.type = :control
-        else
+        elsif self.valid_id?
           self.type = :data
+        else
+          self.type = :invalid_id
         end
       end
         

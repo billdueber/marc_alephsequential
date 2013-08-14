@@ -11,18 +11,11 @@ module MARC
       
       attr_accessor :log
       attr_reader :lines
+      attr_accessor :current_id
       
       
-      def initialize(file)
-        if file.is_a?(String)
-          handle = File.new(file)
-        elsif file.respond_to?("read", 5)
-          handle = file
-        else
-          throw "must pass in path or File/IO object"
-        end
-        @handle = handle
-        @lines = handle.each_line # get an iterator
+      def initialize(file_or_string)
+        @handle = MARC::AlephSequential::BufferedLineReader(file_or_string)
       end
       
       
@@ -33,9 +26,7 @@ module MARC
         unless block_given? 
           return enum_for(:each)
         end
-        
-        # The current lines
-        curlines = []
+                
         
         
         
