@@ -29,4 +29,11 @@ module MARC
       
       def as_record
         r = MARC::Record.new
+        r.leader = leader
+        fields.map {|f| r << f}
+        return r
+      end
+    end
+  end
+end
           
