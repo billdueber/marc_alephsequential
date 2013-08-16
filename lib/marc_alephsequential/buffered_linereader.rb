@@ -6,18 +6,22 @@ module MARC
     # AlephSequential is a line-oriented format, with the first field of each line 
     # indicating the record number. Rather than try to screw around with keeping track of
     # the last line read, checking to see if we have one, blah blah blah, I'm going to use
-    # a buffered line reader class so I can #push_back the last line read if it's key
-    # is different than the current record. So when I'm pulling in a new record, I can just
-    # call #next and not worry about it
+    # a buffered line reader class so I can #peek at the next line to know if its id 
+    # is different than the current record. 
     
     class BufferedLineReader
       
       include Enumerable
       
+      attr_accessor :buffer_size
+      attr_reader :underlying_line_number
       
-      def initialize(filename_or_io, buffer_size = 20)
+      def initialize(filename_or_io)
         
-        @buffer_size = buffer_size
+        @passed_in = filename_or_io
+        
+        @underlying_line_number = 0
+        @buffer_size = 10
         @buffer = []
         
         if filename_or_io.is_a? String
@@ -41,35 +45,47 @@ module MARC
         return !(@finished && @buffer.size == 0)
       end
       
-      def fillbuffer
+      def fillbuffer(buffer_size = @buffer_size)
         begin
-          @buffer_size.times do
-            @buffer.push @iter.next
+          buffer_size.times do
+            raw = @iter.next
+            @underlying_line_number += 1
+            @buffer.push process_raw(raw, @underlying_line_number)
           end
         rescue StopIteration
           @finished = true
         end
       end
       
-      def next
-        if @buffer.size == 0 
-          if @finished
-            raise StopIteration, nil, nil
-          else
-            fillbuffer
-          end
-        end
-        @buffer.shift
+      # Empty version here; can override for processing lines on the fly
+      def process_raw(raw, line_number)
+        raw
       end
+      
+      # def next
+      #   if @buffer.size == 0 
+      #     if @finished
+      #       raise StopIteration, nil, nil
+      #     else
+      #       fillbuffer(@buffer_size + 1)
+      #     end
+      #   end
+      #   @buffer.shift
+      # end
+      
+      def next
+        raise StopIteration, "End of #{@passed_in}", nil if @buffer.size == 0
+        rv = @buffer.shift
+        fillbuffer if @buffer.size == 0
+        rv
+      end
+        
       
       def peek
+        fillbuffer unless @buffer.size > 0
         @buffer[0]
       end
-      
-      def push_back(line)
-        @buffer.unshift line.gsub(/\n$/, '')
-      end
-      
+            
       def each
         begin
           while true

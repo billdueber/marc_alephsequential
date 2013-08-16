@@ -1,6 +1,6 @@
 require 'marc'
 require 'yell'
-require 'marc_alephsequential/asline'
+require 'marc_alephsequential/asline_reader'
 
 module MARC
   module AlephSequential
@@ -13,24 +13,14 @@ module MARC
       attr_reader :lines
       attr_accessor :current_id
       
-      
-      def initialize(file_or_string)
-        @handle = MARC::AlephSequential::BufferedLineReader(file_or_string)
+      def initialize(filename_or_io, opts={})
+        @areader = ASLineReader.new(filename_or_io)
       end
       
       
       
       
-      # Iterator
-      def each
-        unless block_given? 
-          return enum_for(:each)
-        end
-                
-        
-        
-        
-      end
+      
 
 
     end
