@@ -61,18 +61,7 @@ module MARC
       def process_raw(raw, line_number)
         raw
       end
-      
-      # def next
-      #   if @buffer.size == 0 
-      #     if @finished
-      #       raise StopIteration, nil, nil
-      #     else
-      #       fillbuffer(@buffer_size + 1)
-      #     end
-      #   end
-      #   @buffer.shift
-      # end
-      
+            
       def next
         raise StopIteration, "End of #{@passed_in}", nil if @buffer.size == 0
         rv = @buffer.shift
