@@ -38,7 +38,7 @@ module MARC
           lastfield = @fields.pop
           unless lastfield
             raise MARC::AlephSequential::Error.new('unknown', asline.line_number),  
-                  "#{asline.line_number} has invalid id and no preivous line to concat it to (file stars bad?)"
+                  "#{asline.line_number} has invalid id and no preivous line to concat it to (file starts bad?)"
                   nil
           end
           log.info "#{asline.line_number} #{lastfield.id} / #{lastfield.tag} Concatenating line #{asline.line_number} to previous line"
