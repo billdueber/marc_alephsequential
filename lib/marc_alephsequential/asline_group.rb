@@ -63,7 +63,7 @@ module MARC
                   nil
           end
           log.info "#{asline.line_number} #{lastfield.id} / #{lastfield.tag} Concatenating line #{asline.line_number} to previous line"
-          @aslines.push ASLine.new(lastfield.rawstr + ' ' + asline.rawstr, lastfield.line_number)
+          @aslines.push ASLine.new(lastfield.rawstr +  asline.rawstr, lastfield.line_number)
         else
           @aslines.push asline
         end

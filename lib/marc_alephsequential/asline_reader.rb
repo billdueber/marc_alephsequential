@@ -7,7 +7,7 @@ module MARC
     class ASLineReader < BufferedLineReader
       def process_raw(raw, line_number)
         super
-        ASLine.new(raw.chomp, line_number)
+        ASLine.new(raw, line_number)
       end
       
     end

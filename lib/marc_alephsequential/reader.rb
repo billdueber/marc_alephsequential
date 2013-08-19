@@ -8,10 +8,7 @@ module MARC
   module AlephSequential
         
     class Reader
-      
-      include MARC::AlephSequential::Log
-      
-      
+
       include Enumerable
       include MARC::AlephSequential::Log
       
@@ -23,6 +20,11 @@ module MARC
       end
       
       def each
+        
+        unless block_given?
+          return enum_for(:each)
+        end
+        
         agroup = ASLineGroup.new
         
         while @areader.has_next?
@@ -35,6 +37,7 @@ module MARC
             agroup.add @areader.next
           end
         end
+        # yield whatever is left, unless there's nothing left
         yield agroup.to_record unless agroup.empty?
       end
     end
