@@ -16,8 +16,10 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
   require 'marc_alephsequential'
 
   log = GetALogFromSomewhere.new
-  reader = MARC::AlephSequential::Reader.new('myfile.seq')
-  reader.log = log # optional. Set up a logger; otherwise, no logging of warnings will be done
+  # reader = MARC::AlephSequential::Reader.new('myfile.seq')
+  reader = MARC::AlephSequential::Reader.new('myfile.seq.gz') # automatically notice the .gz and behave!
+  
+  reader.log = log # optional. Set up a logger; otherwise, a default logger will be used
   
   begin
     reader.each do |r|
@@ -25,6 +27,7 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
     end  
   rescue MARC::AlephSequential::Error => e
     log.error "Error while parsing record #{e.record_id} at/near #{e.line_number}: #{e.message}"
+    retry # may or may not work the way you'd hope/expect
   rescue => e
     log.error "Other error of some sort. quitting. #{e.message}"
   end
@@ -39,28 +42,31 @@ Each MARC record is presented as a series of unicode text lines, one field per l
 
     000000228 LDR   L ^^^^^nam^a22002891^^4500
     000000228 001   L 000000228
-    000000228 003   L MiU
-    000000228 005   L 19880715000000.0
     000000228 006   L m^^^^^^^^d^^^^^^^^
     000000228 007   L cr^bn^---auaua
     000000228 008   L 880715r19691828nyuab^^^^^^^^|00000^eng^^
     000000228 010   L $$a68055188
     000000228 020   L $$a083711750X
     000000228 035   L $$a(RLIN)MIUG0021856-B
+    000000794 24514 L $$aThe descent of manuscripts.
+    000000794 60010 L $$aCicero, Marcus Tullius$$xManuscripts.
+    000000794 60000 L $$aPlato.$$tCritias$$xManuscripts.
 
 Each line has the following format (note: All must be in utf-8)
 
-* 9 characters (generally digits) for the aleph record ID
+* 9 characters (all digits) for the aleph record ID
 * [space]
-* 3 character tag (left-justified if need be)
+* 3 character tag (left-justified / space padded if need be)
 * 1 character indicator 1
 * 1 character indicator 2
 * [space L space], for some historic reasons I don't know
 * The tag's value, perhaps with internal subfields
 
+A record is defined as a set of continuous lines with the same record ID (i.e., the way you know you've finished with a record is because the record ID changes or you hit EOF). 
+
 ### How to read the Aleph sequential "value"
 
-The leader and control fields have no internal structure, but spaces in the value are displayed as '^' for some reason. (The reader, obviously, changes them back into spaces)
+The leader and control fields have no internal structure, but spaces in the values are stored as '^' for some reason. (The reader, obviously, changes them back into spaces)
 
 For data fields, the subfields are indicated as follows:
 
@@ -78,10 +84,10 @@ The easy-to-see problems are:
 * You can't have an embedded '$$' in a data field's value, because it will be interpreted as the start of a new subfield. '$$' isn't super common as a typo, but I've seen it.
 
 
-## Parse errors and workarounds
+## Parse errors and automatic workarounds
 
 * Lines that don't start with a nine-digit id will be assumed to be a part of the previous line that has an illegal spurious newline. The newline will be removed and all put back together again. If there is no "previous line" because it's the first line of the file, throw an error.
-* Any complete record that doesn't include a leader (LDR) will throw an error
+* Any completed record that doesn't include a leader (LDR) will throw an error
 * Datafield values that don't start with '$$' will be logged as an error and assumed that the first set of data should be in subfield $$a
 
 
