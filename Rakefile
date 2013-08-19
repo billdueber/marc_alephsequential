@@ -35,4 +35,4 @@ end
 
 task :spec => :test
  
-task(default: :test)
+task(:default => :test)
