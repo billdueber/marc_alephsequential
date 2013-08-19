@@ -1,4 +1,5 @@
 # marc_alephsequential
+[![Build Status](https://secure.travis-ci.org/billdueber/marc_alephsequential.png)](http://travis-ci.org/billdueber/marc_alephsequential)
 
 A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in the Aleph sequential format
 
