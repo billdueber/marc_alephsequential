@@ -1,12 +1,16 @@
 require 'marc'
 require_relative 'error'
+require_relative 'log'
 
 module MARC
   module AlephSequential
     
+    
     #  A model of a line (field) in an alephsequential file.
     class ASLine
       
+      include Log
+
       # Characters in leader/control fields that need to be turned (back) into spaces
       TURN_TO_SPACE = /\^/
 
@@ -21,9 +25,6 @@ module MARC
       
       # The line number in the file/stream, for error reporting
       attr_accessor :line_number
-      
-      # A log object (anything that responds to #debug, #info, etc.)
-      attr_accessor :log
       
       # Either the value of a control/fiexed field, or a string representation of a datafield's subfield
       attr_accessor :value
@@ -84,6 +85,11 @@ module MARC
       # Turn the current object into a datafield, without doing any checks
       # @return [MARC::DataField]
       def to_data_field
+        if self.value[0..1] != '$$'
+          log.error("#{self.line_number} #{self.id} Variable field #{self.tag} doesn't start with '$$'. Prepending '$$a'.")
+          self.value = '$$a' + self.value
+        end
+
         subfields = parse_string_into_subfields(value)
         f = MARC::DataField.new(tag, ind1, ind2)
         f.subfields = subfields

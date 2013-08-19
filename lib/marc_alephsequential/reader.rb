@@ -10,7 +10,7 @@ module MARC
     class Reader
 
       include Enumerable
-      include MARC::AlephSequential::Log
+      include Log
       
       attr_reader :lines
       attr_accessor :current_id

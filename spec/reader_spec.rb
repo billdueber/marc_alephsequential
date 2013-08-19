@@ -7,6 +7,7 @@ describe 'Reader' do
     @batch =  'spec/data/batch.seq'
     @newline = 'spec/data/newline.seq'
     @noleader = 'spec/data/noleader.seq'
+    @nosubfieldindicator = 'spec/data/no_initial_subfield.seq'
     
   end
   
@@ -46,6 +47,16 @@ describe 'Reader' do
     r['600']['a'].must_equal 'Cicero, Marcus Tullius'
     r['600']['x'].must_equal 'Manuscripts.'
   end
+  
+  it "works with lack of beginning '$$'" do
+    r = nil # capture_io creates a lexical closure, so we need to define it out here
+    out,err = capture_io do
+      r = MARC::AlephSequential::Reader.new(@nosubfieldindicator).first
+    end
+    err.must_match /Variable field 245 doesn\'t start with \'\$\$/m
+    r['245']['a'].must_equal 'The descent of manuscripts.'
+  end
+    
     
 end
     

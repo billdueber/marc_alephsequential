@@ -17,6 +17,6 @@ rescue Bundler::BundlerError => e
 end
 
 require "minitest/autorun"
-require 'minitest/reporters'
-MiniTest::Reporters.use! 
-# require 'minitest/hell' # parallelize testing
+# require 'minitest/reporters'
+# MiniTest::Reporters.use! 
+require 'minitest/hell' # parallelize testing

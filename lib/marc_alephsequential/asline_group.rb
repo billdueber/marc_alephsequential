@@ -11,7 +11,7 @@ module MARC
     
     class ASLineGroup
       
-      include MARC::AlephSequential::Log
+      include Log
       
       # @!attribute aslines
       #   @return [Array<MARC::Field>] Internal list of MARC field object
@@ -54,7 +54,6 @@ module MARC
             log.warn("#{asline.line_number} #{asline.id} Set leader more than once; last one wins")
           end
           @leader = asline.value
-          log.debug "#{asline.line_number} #{asline.id} Set leader to #{leader}"
         when :invalid_id
           lastfield = @aslines.pop
           unless lastfield

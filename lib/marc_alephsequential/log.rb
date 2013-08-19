@@ -12,7 +12,7 @@ module MARC
       end
     
       def log
-        Log.log ||= Yell.new STDERR, :level => 'gte.warn', :name=>'MAS'
+        Log.log ||= Yell.new STDERR, :level => [ :warn, :error], :name=>'MAS'
         Log.log
       end
     end

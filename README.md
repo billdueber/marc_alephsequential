@@ -16,7 +16,6 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
 
   log = GetALogFromSomewhere.new
   reader = MARC::AlephSequential::Reader.new('myfile.seq')
-  reader.flexible = true # fix bad indicators, look for embedded newlines, etc.
   reader.log = log # optional. Set up a logger; otherwise, no logging of warnings will be done
   
   begin
@@ -24,8 +23,7 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
       # do stuff with the record
     end  
   rescue MARC::AlephSequential::Error => e
-    log.error "Error while parsing record #{e.record_id}: #{e.message}"
-    retry # see if we can continue with other records
+    log.error "Error while parsing record #{e.record_id} at/near #{e.line_number}: #{e.message}"
   rescue => e
     log.error "Other error of some sort. quitting. #{e.message}"
   end
@@ -79,13 +77,11 @@ The easy-to-see problems are:
 * You can't have an embedded '$$' in a data field's value, because it will be interpreted as the start of a new subfield. '$$' isn't super common as a typo, but I've seen it.
 
 
-## _Flexible_ mode
+## Parse errors and workarounds
 
-If `reader.flexible` is set to true (or left at the `true` default), the following changes will be made on read and emit warnings:
-
-* Indicators that are not 0-9 or space will be changed to space
-* Lines that don't start with a nine-digit id will be assumed to be a part of the previous line that has an illegal spurious newline. The newline will be replaced by a space and all put back together again.
-* Values that don't start with '$$' will be noted as an error and assumed that the first set of data should be in subfield $a
+* Lines that don't start with a nine-digit id will be assumed to be a part of the previous line that has an illegal spurious newline. The newline will be removed and all put back together again. If there is no "previous line" because it's the first line of the file, throw an error.
+* Any complete record that doesn't include a leader (LDR) will throw an error
+* Datafield values that don't start with '$$' will be logged as an error and assumed that the first set of data should be in subfield $$a
 
 
 
