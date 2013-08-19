@@ -27,8 +27,12 @@ YARD::Rake::YardocTask.new
 task :doc => :yard
 
 require 'rake/testtask'
-Rake::TestTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
+Rake::TestTask.new do |t|
+  t.libs.push 'lib'
+  t.libs.push 'spec'
+  t.test_files = Dir.glob('spec/**/*_spec.rb')
 end
+
+task :spec => :test
+ 
+task(default: :test)

@@ -16,7 +16,7 @@ rescue Bundler::BundlerError => e
   exit e.status_code
 end
 
-require 'test/unit'
-
-class Test::Unit::TestCase
-end
+require 'minitest/reporters'
+require "minitest/autorun"
+MiniTest::Reporters.use!
+require 'minitest/hell' # parallelize testing
