@@ -100,4 +100,4 @@ The easy-to-see problems are:
 
 Copyright (c) 2013 Bill Dueber
 
-See {file:LICENSE.txt} for details.
+See [LICENSE.txt] for details.
