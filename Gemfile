@@ -6,8 +6,10 @@ gem 'yell'
 
 group :test do
   gem 'minitest'
-  gem "minitest-reporters", '>= 0.8.0'
-  gem 'minitest-colorize'
+end
+
+group :test do
+  gem 'minitest'
 end
 
 group :development do

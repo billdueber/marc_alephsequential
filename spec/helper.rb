@@ -1,5 +1,3 @@
-require 'rubygems'
-
 begin
   require 'bundler'
 rescue LoadError => e
@@ -18,5 +16,5 @@ end
 
 require "minitest/autorun"
 # require 'minitest/reporters'
-# MiniTest::Reporters.use! 
+# MiniTest::Reporters.use!
 require 'minitest/hell' # parallelize testing

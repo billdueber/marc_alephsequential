@@ -1,7 +1,6 @@
 require 'helper'
 require 'marc_alephsequential'
 
-
 describe "version" do
   it "must exist" do
     version = MarcAlephsequential.const_get('VERSION')

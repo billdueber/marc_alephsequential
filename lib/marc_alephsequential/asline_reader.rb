@@ -9,8 +9,8 @@ module MARC
         super
         ASLine.new(raw, line_number)
       end
-      
+
     end
   end
 end
-      
+
