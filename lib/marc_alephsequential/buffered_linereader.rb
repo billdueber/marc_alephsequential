@@ -29,7 +29,7 @@ module MARC
           if filename_or_io =~ /\.gz$/
             @handle = Zlib::GzipReader.new(@handle)
           end
-        elsif filename_or_io.respond_to?("read", 5)
+        elsif filename_or_io.respond_to?("read")
           @handle = filename_or_io
         else
           raise ArgumentError.new("BufferedLineReader needs an IO object or filename, got #{filename_or_io} (#{filename_or_io.inspect})")
