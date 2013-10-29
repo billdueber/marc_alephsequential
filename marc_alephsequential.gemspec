@@ -17,4 +17,13 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
 
+
+  gem.add_dependency 'marc'
+  gem.add_dependency 'yell'
+  gem.add_development_dependency 'minitest'
+  gem.add_development_dependency 'kramdown'
+  gem.add_development_dependency 'bundler', '~> 1'
+  gem.add_development_dependency 'rake', '>= 1.0'
+  gem.add_development_dependency 'yard', '>= 0.8'
+
 end
