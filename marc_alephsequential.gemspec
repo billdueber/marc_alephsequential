@@ -18,8 +18,8 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
 
 
-  gem.add_dependency 'marc'
-  gem.add_dependency 'yell'
+  gem.add_dependency 'marc', '~>1'
+  gem.add_dependency 'yell', '~>2'
   gem.add_development_dependency 'minitest'
   gem.add_development_dependency 'kramdown'
   gem.add_development_dependency 'bundler', '~> 1'
