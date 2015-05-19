@@ -20,16 +20,14 @@ A [ruby-marc](https://github.com/ruby-marc/ruby-marc) reader for MARC files in t
   reader = MARC::AlephSequential::Reader.new('myfile.seq.gz') # automatically notice the .gz and behave!
   
   reader.log = log # optional. Set up a logger; otherwise, a default logger will be used
-  
-  begin
-    reader.each do |r|
-      # do stuff with the record
-    end  
-  rescue MARC::AlephSequential::Error => e
-    log.error "Error while parsing record #{e.record_id} at/near #{e.line_number}: #{e.message}"
-    retry # may or may not work the way you'd hope/expect
-  rescue => e
-    log.error "Other error of some sort. quitting. #{e.message}"
+
+  reader.each do |r|
+    if MARC::AlephSequential::ErrorRecord === r
+      e = r.error
+      log.error "Error while parsing record #{e.record_id} at/near #{e.line_number}: #{e.message}"
+      next
+    end
+    doStuffWithTheRecord(r)
   end
 
 ```

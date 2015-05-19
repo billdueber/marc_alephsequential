@@ -33,13 +33,11 @@ describe 'Reader' do
 
   it "yells when there's no leader" do
     error = nil
-    begin
-      r = MARC::AlephSequential::Reader.new(@noleader).first
-    rescue MARC::AlephSequential::Error => e
-      error = e
-    end
-    error.wont_be_nil
-    error.message.must_match /leader/
+    r = MARC::AlephSequential::Reader.new(@noleader).first
+    r.must_be_kind_of MARC::AlephSequential::ErrorRecord
+    r.must_respond_to :error
+    r.error.wont_be_nil
+    r.error.message.must_match /leader/
   end
 
   it "deals ok with embedded newline" do
